@@ -16,8 +16,8 @@ app.use(errorHandler);
 
 const { PORT = 3000 } = process.env;
 
-app.use("/auth", userRouter);
-app.use("/main", mainRouter);
+app.use("/api/v1/users/auth", userRouter);
+app.use("/api/v1/users/main", mainRouter);
 
 app.get("*", (req: Request, res: Response, next: ()=> void ) => {
     res.status(505).json({ message: "bad request"});
