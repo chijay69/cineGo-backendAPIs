@@ -1,6 +1,6 @@
 import { AppDataSource } from "./data-source";
-import * as express from "express";
-import * as dotenv from "dotenv";
+import express from "express";
+import dotenv from "dotenv";
 import { Request, Response } from "express";
 import userRouter from "./routes/auth/routes";
 import mainRouter from "./routes/main/routes";
