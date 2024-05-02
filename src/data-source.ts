@@ -21,7 +21,7 @@ const { DB_TYPE, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_E
 
 export const AppDataSource = new DataSource({
     
-    type: "postgres",
+    type: "mssql",
     host: DB_HOST,
     port: parseInt(DB_PORT),
     username: DB_USERNAME,
