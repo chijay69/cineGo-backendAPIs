@@ -64,10 +64,4 @@ export class AuthController {
 
         return res.status(201).json({ message: "user created Successfully", token, userDataResponse})
     }
-
-    static async home (req: Request, res: Response ){
-        const locati = req.headers.location;
-
-        return res.status(200).send(`your iP is ${locati}`);
-    }
 }

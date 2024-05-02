@@ -4,6 +4,9 @@ import { User } from "./User";
 @Entity({ name: "profiles"})
 export class Profile {
 
+    @PrimaryGeneratedColumn("rowid")
+    id: number;
+
     @Column({ nullable: false })
     profileName: string;
 

@@ -44,7 +44,7 @@ export class User {
     
     @ManyToMany(() => Movie, (movie) => movie.user)
     @JoinTable()
-    movies: Movie[];
+    movies: Movie;
 
     @OneToMany(() => Billing, (billing) => billing.user)
     billing: Billing[];

@@ -15,13 +15,13 @@ export class Billing {
     @Column({ nullable: false })
     ammount: number
 
-    @Column()
+    @Column("simple-array")
     status: Status[];
     
-    @Column()
+    @Column("simple-array")
     plan: Plan[];
 
-    @Column()
+    @Column("simple-array")
     method: string; // e.g., 'credit card'
 
     @Column()

@@ -34,7 +34,7 @@ import { User } from "./User";
     @Column({ nullable: false })
     image: string;
   
-    @Column({ nullable: false })
+    @Column("simple-array",{ nullable: false })
     cast: string[];
   
     @CreateDateColumn()

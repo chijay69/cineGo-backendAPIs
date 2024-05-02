@@ -1,7 +1,6 @@
 import * as express from "express";
 import { authentication, authorization } from "../../middleware/auth.middleware";
 import { UserController } from "../../controllers/main/UserController";
-import { AuthController } from "../../controllers/auth/AuthController";
 
 const mainRouter = express.Router();
 
@@ -13,6 +12,6 @@ mainRouter.put("/users/:ids", authentication, authorization(["user", "admin"]), 
 
 mainRouter.delete("/users/:ids", authentication, authorization(["admin"]), UserController.deleteUser);
 
-mainRouter.get("/", AuthController.home)
+mainRouter.get("/", UserController.home)
 
 export default mainRouter;
