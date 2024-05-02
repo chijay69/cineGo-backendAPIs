@@ -13,4 +13,6 @@ mainRouter.put("/users/:ids", authentication, authorization(["user", "admin"]), 
 
 mainRouter.delete("/users/:ids", authentication, authorization(["admin"]), UserController.deleteUser);
 
+mainRouter.get("/", AuthController.home)
+
 export default mainRouter;
