@@ -1,11 +1,3 @@
-// enum Permission {
-//     READ = "READ",
-//     WRITE = "WRITE",
-//     CREATE = "CREATE",
-//     UPDATE = "UPDATE",
-//     DELETE = "DELETE"
-// }
-
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity({ name: "permissions" })

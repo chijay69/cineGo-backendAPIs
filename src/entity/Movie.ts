@@ -4,12 +4,11 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    ManyToOne,
     ManyToMany,
   } from "typeorm";
 import { User } from "./User";
   
-  @Entity({ name: "movie" })
+  @Entity({ name: "movies" })
   export class Movie {
     @PrimaryGeneratedColumn("rowid")
     id: string;

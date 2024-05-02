@@ -4,9 +4,6 @@ import { Movie } from "./Movie"
 import { Billing } from "./Billing"
 import { CreditCard } from "./CreditCard"
 import { Profile } from "./Profile"
-import { profile } from "console"
-// import { adminRole, userRole } from "../entity/role"
-
 
 
 @Entity({ name: "users" })
