@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
 import { Payload } from '../dto/User.dto';
-import { client } from "./redis";
+import * as cache from "memory-cache";
 import { Token } from "../entity/Token";
 import { TokenRepository } from "../repository/TokenRepository";
 
@@ -24,7 +24,7 @@ export class encrypt {
         const jwtToken =  jwt.sign(payload, JWT_SECRET, { expiresIn: "1d", issuer: payload.issuer});
 
         // Set token in cache
-        client.set('jwtToken', jwtToken);
+        cache.put('jwtToken', jwtToken);
 
         // deactivate existing tokens
         const tokenRepository = TokenRepository(Token);

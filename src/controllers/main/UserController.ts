@@ -1,13 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { userRepository} from '../../repository/UserRepository'
 import { User } from "../../entity/User";
-import { encrypt, validateEmail, validatePassword } from "../../utility/encrypt";
-import { UserResponse, Payload } from '../../dto/User.dto';
 import * as cache from "memory-cache";
 import { UserService } from "../../service/UserService";
 import { ProfileResponse } from "../../dto/Profile.dto";
 import { authentication, authorization } from "../../middleware/auth.middleware";
-import { client } from "../../utility/redis";
 
 export class UserController {
   static async getProfile(req: Request, res: Response) {

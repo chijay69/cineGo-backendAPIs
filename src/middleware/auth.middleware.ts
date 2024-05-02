@@ -1,14 +1,9 @@
 import { NextFunction, Response, Request } from "express";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
-import { AppDataSource } from "../data-source";
 import { userRepository} from '../repository/UserRepository'
-
 import { User } from "../entity/User";
-import { Role } from "../entity/role";
-import { client } from "../utility/redis";
-import { Token } from "../entity/Token";
-import { TokenRepository } from "../repository/TokenRepository";
+import * as cache from "memory-cache";
 
 
 dotenv.config();
@@ -26,7 +21,7 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
     
     // Check if token in cache matches the token in the request
     // Get token from cache
-    const cachedToken = await client.get('jwtToken');
+    const cachedToken = await cache.get('jwtToken');
     if (cachedToken !== token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
