@@ -2,9 +2,7 @@ import { Request, Response } from "express";
 import { userRepository } from "../../repository/UserRepository";
 import { User } from "../../entity/User";
 import { encrypt, validateEmail, validatePassword } from "../../utility/encrypt";
-import { Payload, UserResponse } from "../../dto/User.dto";
 import { UserService } from "../../service/UserService";
-import { ProfileResponse } from "../../dto/Profile.dto";
 
 export class AuthController {
     static async signIn (req: Request, res: Response) {
