@@ -25,12 +25,12 @@
       "mssql": "^9.1.1"
    },
    "scripts": {
-      "start": "node dist/index.js",
-      "start:dev": "ts-node dist/index.ts",
-      "start:prod": "npm run build && node ./dist/index.js",
+      "start": "node build/index.js",
+      "start:dev": "ts-node build/index.js",
+      "start:prod": "npm run build && node ./build/index.js",
       "build": "npx tsc",
       "postinstall": "tsc",
-      "watch-node": "nodemon dist/index.js",
+      "watch-node": "nodemon build/index.js",
       "watch-ts": "tsc -w",
       "deploy": "git add . && git commit -m Heroku && git push heroku master"
    }

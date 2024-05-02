@@ -5,11 +5,16 @@
          "es6"
       ],
       "target": "es5",
+      "skipLibCheck": true,
       "module": "commonjs",
       "moduleResolution": "node",
       "outDir": "./build",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true
-   }
+   },
+   "include": ["./src/**/*.*"],
+  "exclude": [
+    "node_modules"
+  ]
 }
