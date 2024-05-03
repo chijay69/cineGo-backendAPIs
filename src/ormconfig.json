@@ -1,0 +1,11 @@
+{
+    "type": "postgres",
+    "host": "eu-az-sql-serv1.database.windows.net",
+    "port": 1433,
+    "username": "ujg9qlg3m352fkj",
+    "password": "WdIhBv&hj%FvbDO$pExYDCQuv",
+    "database": "dgtuudzg16la5i2",
+    "entities": ["src/entities/*.ts"],
+    "migrations": ["src/migrations/*.ts"],
+    "migrationsTableName": "custom_migration_table"
+}
