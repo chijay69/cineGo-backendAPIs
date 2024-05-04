@@ -7,14 +7,13 @@ import mainRouter from "./routes/main/routes";
 import "reflect-metadata";
 import { log } from "console";
 import { errorHandler } from "./middleware/error.middleware";
-dotenv.config();
+import { port } from './config';
 
 const app = express();
 
 app.use(express.json());
 app.use(errorHandler);
 
-const { PORT = 3000 } = process.env;
 
 app.use("/api/v1/users/auth", userRouter);
 app.use("/api/v1/users/main", mainRouter);
@@ -25,8 +24,8 @@ app.get("*", (req: Request, res: Response, next: ()=> void ) => {
 
 
 AppDataSource.initialize().then(async ()=> {
-    app.listen(PORT, ()=>{
-        console.log("Server is running on http://localhost: "+ PORT); 
+    app.listen(port, ()=>{
+        console.log("Server is running on http://localhost: "+ port); 
     });
     console.log("Datasource has been initialized!");
     
