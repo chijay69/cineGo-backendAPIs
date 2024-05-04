@@ -21,15 +21,18 @@ const { DB_TYPE, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_E
 
 export const AppDataSource = new DataSource({
     
-    type: "mssql",
+    type: "postgres",
     host: DB_HOST,
     port: parseInt(DB_PORT),
     username: DB_USERNAME,
     password: DB_PASSWORD,
     database: DB_DATABASE,
-    synchronize: NODE_ENV === "dev"? false: false,
+    synchronize: NODE_ENV === "dev"? false: true,
     logging: NODE_ENV === "dev"? false: false,
-    entities: [process.env.NODE_ENV === 'production' ? 'build/entity/*.js' : 'src/entity/*.ts'],
-    migrations: [__dirname + "/migration/*.ts"],
+    entities: [process.env.NODE_ENV === 'production' ? 'build/entity/*.js' : 'build/entity/*.js'],
+    migrations: [__dirname + "/migration/*.js"],
     subscribers: [],
+    ssl: {
+        rejectUnauthorized: false
+      }
 });

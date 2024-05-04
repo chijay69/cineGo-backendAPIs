@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class EntityMigration1714745962424 implements MigrationInterface {
+export class EntityMigration1714762434135 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-        CREATE TABLE IF NOT EXISTS "Permissions" (
+        CREATE TABLE IF NOT EXISTS permissions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL
         );
@@ -144,7 +144,7 @@ export class EntityMigration1714745962424 implements MigrationInterface {
         `);
 
         await queryRunner.query(`
-        DROP TABLE IF EXISTS Users;
+        DROP TABLE IF EXISTS User;
         `);
 
         await queryRunner.query(`

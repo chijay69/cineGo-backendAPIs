@@ -38,6 +38,16 @@
       "postinstall": "tsc",
       "watch-node": "nodemon build/index.js",
       "watch-ts": "tsc -w",
-      "deploy": "git add . && git commit -m Heroku && git push heroku master"
+      "deploy": "git add . && git commit -m Heroku && git push heroku master",
+      "typeorm:migrate": "npm run typeorm migration:generate -- -n",
+      "typeorm:create": "npm run typeorm migration:create -- -n",
+      "typeorm:run": "npm run typeorm migration:run",
+      "typeorm": "npm run build && npx typeorm -- -d ./build/data-source.ts",
+      "migration:run": "npm run typeorm -- migration:run",
+      "migration:revert": "npm run typeorm -- migration:revert",
+      "migration:create": "npm run typeorm -- migration:create",
+      "migration:generate": "npm run typeorm -- migration:generate",
+      "migration": "npm run typeorm migration:run -- -d ./src/data-source.ts",
+      "migration:token": "typeorm migration:create ./src/migrations/EntityMigration"
    }
 }
