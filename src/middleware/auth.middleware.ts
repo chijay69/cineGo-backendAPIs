@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import { userRepository} from '../repository/UserRepository'
 import { User } from "../entity/User";
 import * as cache from "memory-cache";
+import { Role } from "../entity/role";
 
 
 dotenv.config();
@@ -25,13 +26,15 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
     if (cachedToken !== token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
+
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     if (!decode) {
         return res.status(401).json({ message: "Unauthorized" });
     }
-    
-    
+
     req[" currentuser"] = decode;
+    
+    
     next();
 };
 
@@ -41,13 +44,13 @@ export const authorization = (roles: string[])=>{
         const userRepo = userRepository(User);
         const user = await userRepo.findOne({
             where: { id: req[" currentuser"].id},
-            relations: ['roles']
         });
         console.log(user);
         if (!user) {
             return res.status(401).json({ message: "Unauthorized" });
         }
-        const userRoles = user.roles.map((role)=>(role.name));
+        const userRoles = user.roles.map((role: Role)=>(role.name));
+
         const hasPermission = roles.some(role => userRoles.includes(role))
         if (!hasPermission) {
             return res.status(403).json({ message: "Forbidden" })

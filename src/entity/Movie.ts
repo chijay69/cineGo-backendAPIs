@@ -5,6 +5,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     ManyToMany,
+    JoinTable,
   } from "typeorm";
 import { User } from "./User";
   
@@ -44,5 +45,6 @@ import { User } from "./User";
     updatedAt: Date;
 
     @ManyToMany(() => User, (user) => user.movies)
+    @JoinTable()
     user: User;
   }

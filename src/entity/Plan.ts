@@ -1,5 +1,8 @@
-export enum Plan{
-    BASIC = "BASIC",
-    MEDIUM = "MEDIUM",
-    PREMIUM = "PREMIUM"
+import { Plans } from "./Plans";
+
+export interface Plan {
+    name: string,
+    amount: number,
+    description: string,
+    plan: Plans
 }

@@ -3,15 +3,13 @@ import * as bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
 import { Payload } from '../dto/User.dto';
 import * as cache from "memory-cache";
-import { Token } from "../entity/Token";
-import { TokenRepository } from "../repository/TokenRepository";
-
 
 dotenv.config();
 
-const { JWT_SECRET = "" } = process.env;
+const { JWT_SECRET } = process.env;
 
 export class encrypt {
+
     static async encryptpass(password: string){
         return bcrypt.hashSync(password, 14);
     };
@@ -21,32 +19,30 @@ export class encrypt {
     };
 
     static async generateToken(payload: Payload){
-        const jwtToken =  jwt.sign(payload, JWT_SECRET, { expiresIn: "1d", issuer: payload.issuer});
-
-        // Set token in cache
-        cache.put('jwtToken', jwtToken);
-
-        // deactivate existing tokens
-        const tokenRepository = TokenRepository(Token);
-
-        await tokenRepository.update({ userId: payload.id }, { isActive: false });
         
-
-        const tokenEntity = new Token();
-        tokenEntity.token = jwtToken;
-        tokenEntity.userId = payload.id;
-
-        await tokenRepository.save(tokenEntity);
-
-        return jwtToken;
-    };
-
+        return new Promise((resolve, reject) => {
+            jwt.sign(payload, JWT_SECRET, { expiresIn: "1d", issuer: payload.issuer }, (err, token) => {
+                if (err) {
+                    console.error(`Error occurred while generating token: ${err}`);
+                    reject(new Error("Failed to generate token"));
+                } else {
+                    // Set token in cache
+                    cache.put('jwtToken', token);
+                    resolve(token);
+                }
+            });
+        });
+    }
 }
 
-export const validateEmail = (email) => {
-    return true;
-}
+export const validatePassword = (password: string): boolean => {
+    // Regular expression to match the email format
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-_@])[A-Za-z\d-_@]{6,}$/;
+    return passwordRegex.test(password);
+};
 
-export const validatePassword = (password) => {
-    return true;
+export const validateEmail = (email: string): boolean => {
+    // Regular expression for email validation with at least two characters in local and domain parts
+    const emailRegex = /^[^\s@]{2,}@[^\s@]{2,}\.[^\s@]{2,}$/;
+    return emailRegex.test(email);
 }

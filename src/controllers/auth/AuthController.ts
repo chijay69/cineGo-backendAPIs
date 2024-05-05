@@ -3,45 +3,55 @@ import { userRepository } from "../../repository/UserRepository";
 import { User } from "../../entity/User";
 import { encrypt, validateEmail, validatePassword } from "../../utility/encrypt";
 import { UserService } from "../../service/UserService";
+import { userPlans } from "../../entity/userPlan";
+
 
 export class AuthController {
     static async signIn (req: Request, res: Response) {
         try {
             const { email, password } = req.body;
+
             if (!email || !password){
-                return res.status(500).json({ message: "email and password required"})
+                return res.status(500).json({ message: "email and password required"});
             }
             
             const userRepo = userRepository(User);
+            
             const user = await userRepo.findOne({
                 where: { email }
             });
-            const isPasswordValid = encrypt.comparepass(password, user.password)
-            if (!user || !isPasswordValid){
-                res.status(404).json({message: "User not found!"})
+
+            const isPasswordValid = encrypt.comparepass(password, user.password);
+
+            if (!isPasswordValid){
+                res.status(404).json({message: "Invalid password" })
             }
 
             const {userDataResponse, userPayload} =  UserService(user);
 
-            const token = encrypt.generateToken(userPayload);
+            try {
+                const token = await encrypt.generateToken({ id: userPayload.id, issuer: userPayload.issuer });
+                res.status(200).json({ message: "Login successful", userDataResponse, token});
+            } catch (error) {
+                console.error("Failed to generate token");
+                throw new Error(error);
+            }
 
-            res.status(200).json({ message: "Login successful", userDataResponse, token})
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: "Internal server rror"});
+            res.status(500).json({ message: "Internal server error"});
         }
     }
 
-
     static async siginUp (req: Request, res: Response) {
-        const { firstName, lastName, email, password, role, country, referalCode,  } = req.body;
+        const { firstName, lastName, email, password, role, country, referalCode, selectedPlanName,  } = req.body;
 
         if (!validateEmail(email)){
-            res.status(403).json({ message: "email format is incorrect"})
+            res.status(403).json({ message: "email format is incorrect"});
         }
 
         if (!validatePassword(password)){
-            res.status(403).json({ message: "password format is incorrect"})
+            res.status(403).json({ message: "password format is incorrect"});
         }
         
         const encryptedPassword = await encrypt.encryptpass(password);
@@ -54,14 +64,30 @@ export class AuthController {
         user.country = country;
         user.referalCode = referalCode;
 
+        // Assuming 'user' is an instance of the User entity
+        const selectedPlan = userPlans.find(plan => plan.name === String(selectedPlanName).toLowerCase());
+
+        if (!selectedPlan) {
+            console.error(`Plan '${selectedPlanName}' not found`);
+            return res.status(500).json({ message: "No plan Selected"});
+        }
+
+        user.plan = selectedPlan;
+        
         const userRepo = userRepository(User);
         await userRepo.save(user);
-
-        const {userDataResponse, userPayload} =  UserService(user);
-
         
-        const token = encrypt.generateToken(userPayload);
+        const {userDataResponse, userPayload} =  UserService(user);
+        
+        try {
+            const token = await encrypt.generateToken({ id: userPayload.id, issuer: userPayload.issuer });
+            return res.status(201).json({ message: "User created successfully", token, userDataResponse });
+        } catch (error) {
+            console.error(error);
+            // remove the user
+            userRepo.delete(user.id);
+            return res.status(500).json({ message: "Failed to generate token" });
+        }
 
-        return res.status(201).json({ message: "user created Successfully", token, userDataResponse})
     }
 }

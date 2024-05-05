@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
     entities: [process.env.NODE_ENV === 'production' ? 'build/entity/*.js' : 'build/entity/*.js'],
     migrations: [__dirname + "/migration/*.js"],
     subscribers: [],
-    ssl: {
-        rejectUnauthorized: false
-      }
+    // ssl: {
+    //     rejectUnauthorized: false
+    //   }
 });

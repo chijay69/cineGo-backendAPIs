@@ -19,7 +19,7 @@ export class Billing {
     status: Status[];
     
     @Column("simple-array")
-    plan: Plan[];
+    plan: Plan;
 
     @Column("simple-array")
     method: string; // e.g., 'credit card'
