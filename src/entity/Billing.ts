@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { User } from "./User";
 import { Status } from "./Status";
 import { Plan } from "./Plan";
+import { Plans } from "./Plans";
 
 @Entity({ name: "billing"})
 export class Billing {
@@ -15,13 +16,13 @@ export class Billing {
     @Column({ nullable: false })
     ammount: number
 
-    @Column("simple-array")
-    status: Status[];
+    @Column()
+    status: Status;
     
-    @Column("simple-array")
-    plan: Plan;
+    @Column()
+    plan: Plans;
 
-    @Column("simple-array")
+    @Column()
     method: string; // e.g., 'credit card'
 
     @Column()

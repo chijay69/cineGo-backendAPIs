@@ -4,6 +4,7 @@ import { User } from "../../entity/User";
 import { encrypt, validateEmail, validatePassword } from "../../utility/encrypt";
 import { UserService } from "../../service/UserService";
 import { userPlans } from "../../entity/userPlan";
+import { validatePlan } from "../../entity/Plans";
 
 
 export class AuthController {
@@ -63,13 +64,13 @@ export class AuthController {
         user.roles = role;
         user.country = country;
         user.referalCode = referalCode;
+        const selectedPlan = validatePlan(selectedPlanName);
 
         // Assuming 'user' is an instance of the User entity
-        const selectedPlan = userPlans.find(plan => plan.name === String(selectedPlanName).toLowerCase());
 
         if (!selectedPlan) {
             console.error(`Plan '${selectedPlanName}' not found`);
-            return res.status(500).json({ message: "No plan Selected"});
+            return res.status(500).json({ message: "Invalid plan Selected"});
         }
 
         user.plan = selectedPlan;
@@ -86,7 +87,7 @@ export class AuthController {
             console.error(error);
             // remove the user
             userRepo.delete(user.id);
-            return res.status(500).json({ message: "Failed to generate token" });
+            return res.status(500).json({ message: "Failed to generate user" });
         }
 
     }

@@ -29,8 +29,8 @@ export class User {
     @Column({ nullable: false })
     country: string;
     
-    @Column("simple-array", { nullable: false })
-    plan: Plan[];
+    @Column({ nullable: false })
+    plan: Plans;
     
     @Column("simple-array", { nullable: false })
     roles: Role[];
@@ -54,6 +54,6 @@ export class User {
     movies: Movie;
 
     @OneToMany(() => Billing, (billing) => billing.user)
-    billing: Billing[];
+    billing: Billing;
     
 }

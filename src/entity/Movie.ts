@@ -12,7 +12,7 @@ import { User } from "./User";
   @Entity({ name: "movies" })
   export class Movie {
     @PrimaryGeneratedColumn("rowid")
-    id: string;
+    id: number;
   
     @Column({ nullable: false })
     title: string;
