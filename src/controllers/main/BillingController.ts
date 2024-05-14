@@ -1,27 +1,41 @@
 import { Request, Response } from "express";
 import { userRepository } from '../../repository/UserRepository'
 import { User } from "../../entity/User";
-import { UserService } from "../../service/UserService";
 import { BillingRepository } from "../../repository/BillingRepository";
 import { Billing } from "../../entity/Billing";
 import { Status, validateStatus } from "../../entity/Status";
 import { userPlans } from "../../entity/userPlan";
 
-export class BillingController {
-  static async getUserBilling(req: Request, res: Response) {
-    try {
-      const { ids } = req.params;
-      const id = parseInt(ids);
-      const user = await userRepository(User).findOne({
-        where: { id },
-        relations: ['billing']
-      });
-  
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
 
-      return res.status(200).json({ message: "User billing data", billing: user.billing });
+export class BillingController {
+
+  static async getBilling(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const billing = await BillingRepository(Billing).findOne({
+        where: { id: parseInt(id) },
+        relations: ['user']
+      });
+
+      if (!billing) {
+        return res.status(404).json({ message: "Billing not found" });
+      }
+      return res.status(200).json({ message: "User billing data", billing: billing });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  static async getAllBillings(req: Request, res: Response) {
+    try {
+      const billRepo = BillingRepository(Billing);
+      // Your implementation here
+      const allBillings = await billRepo.find();
+      console.log('all billings: ', allBillings);
+      if(!allBillings)
+        return res.status(404).json({message: "billing resource not found"})
+      return res.status(200).json({ message: "All billings", billings: allBillings });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Internal server error" });
@@ -30,26 +44,29 @@ export class BillingController {
 
   static async setBilling(req: Request, res: Response) {
     try {
-      const { ids } = req.params;
-      const id = parseInt(ids);
+      const billRepo = BillingRepository(Billing);
+      const { id } = req.params;
+      const userId = parseInt(id);
       const { method } = req.body;
-      const user = await userRepository(User).findOne({
-        where: { id },
+      const user = await userRepository(User).findOneOrFail({
+        where: { id: userId },
         relations: ['billing']
       });
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
       const WAIT_TIME: number = 30;
       const schedule: string = "monthly"
-
       const selectedPlan = userPlans.find(plan => plan.name.toLowerCase() === String(user.plan).toLowerCase());
-  
-      const billRepo = BillingRepository(Billing);
+
+      if (!selectedPlan) {
+        return res.status(400).json({ message: "Selected plan not found" });
+      }
+
       const newBilling = new Billing();
-      newBilling.ammount = selectedPlan.ammount;
+      newBilling.ammount = selectedPlan.amount;
       newBilling.description = selectedPlan.description;
       newBilling.plan = selectedPlan.plan;
       newBilling.method = method;
@@ -65,12 +82,8 @@ export class BillingController {
 
       newBilling.user = user;
       await billRepo.save(newBilling);
-      user.billing = newBilling;
-      await userRepository(User).save(user);
 
-      const { userDataResponse } = UserService(user);
-  
-      return res.status(200).json({ message: "Billing set successfully", userDataResponse, newBilling });
+      return res.status(200).json({ message: "Billing set successfully", newBilling });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Error creating billing" });
@@ -79,11 +92,11 @@ export class BillingController {
 
   static async updateBilling(req: Request, res: Response) {
     try {
+      const billRepo = BillingRepository(Billing);
       const { ids } = req.params;
       const id = parseInt(ids);
       const { method, schedule, status }: { method: string, schedule: string, status: Status } = req.body;
   
-      const billRepo = BillingRepository(Billing);
       const billing = await billRepo.findOneOrFail({
         where: { id },
         relations: ['user']
@@ -120,22 +133,23 @@ export class BillingController {
     }
   }
 
-  
   static async deleteBilling(req: Request, res: Response) {
     try {
-      const { ids } = req.params;
-      const id = parseInt(ids);
-      const billingRepository = BillingRepository(Billing);
-      const billing = await billingRepository.findOne({
-        where:{id}
+      const billRepo = BillingRepository(Billing);
+      const { id } = req.params;
+      
+      const billing = await billRepo.findOne({
+        where: { id: parseInt(id) },
+        relations: ['user']
       });
+
 
       if (!billing) {
         return res.status(404).json({ message: "Billing not found" });
       }
 
       const userId = billing.user.id;
-      await billingRepository.remove(billing);
+      await billRepo.remove(billing);
 
       // Update user's billing reference to null
       await userRepository(User).createQueryBuilder().update().set({ billing: null }).where("id = :id", { id: userId }).execute();
@@ -149,7 +163,7 @@ export class BillingController {
 
   static async home(req: Request, res: Response) {
     try {
-      res.status(200).json({ message: "Hello world" });
+      res.status(200).json({ message: "Hello world - Billing" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });

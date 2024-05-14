@@ -1,4 +1,4 @@
-import { Plan } from "../entity/Plan";
+import { Plans } from "../entity/Plans";
 
 export class Payload {
     id: number;
@@ -9,6 +9,6 @@ export class UserResponse {
     firstName: string;
     lastName: string;
     email: string;
-    plan: Plan[]
+    plan: Plans
 }
 

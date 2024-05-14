@@ -64,16 +64,17 @@ export class AuthController {
         user.roles = role;
         user.country = country;
         user.referalCode = referalCode;
-        const selectedPlan = validatePlan(selectedPlanName);
-
-        // Assuming 'user' is an instance of the User entity
-
-        if (!selectedPlan) {
-            console.error(`Plan '${selectedPlanName}' not found`);
-            return res.status(500).json({ message: "Invalid plan Selected"});
+        try {
+            const selectedPlan = validatePlan(selectedPlanName);
+            if (!selectedPlan) {
+                console.error(`Plan '${selectedPlanName}' not found`);
+                return res.status(500).json({ message: "Invalid plan Selected"});
+            }    
+            user.plan = selectedPlan;            
+        } catch (error) {
+            res.status(500).json({message:"Selected does not exist."})
         }
-
-        user.plan = selectedPlan;
+        // Assuming 'user' is an instance of the User entity
         
         const userRepo = userRepository(User);
         await userRepo.save(user);

@@ -4,7 +4,7 @@ import { Movie } from "../../entity/Movie";
 import * as cache from "memory-cache";
 
 export class MovieController {
-  static async getMovies(req: Request, res: Response) {
+  static async getAllMovies(req: Request, res: Response) {
     try {
       let moviesData = cache.get("moviesdata");
       if (!moviesData) {
@@ -27,14 +27,14 @@ export class MovieController {
       const { title, description, url, director, year, rating, image, cast } = req.body;
       const movieRepo = MovieRepository(Movie);
       const movie = new Movie();
-      movie.title = title;
-      movie.description = description;
-      movie.url = url;
-      movie.director = director;
-      movie.year = year;
-      movie.rating = rating;
-      movie.image = image;
-      movie.cast = cast;
+      movie.title = title || movie.title;
+      movie.description = description || movie.description;
+      movie.url = url || movie.url;
+      movie.director = director || movie.director;
+      movie.year = year || movie.year;
+      movie.rating = rating || movie.rating;
+      movie.image = image || movie.image;
+      movie.cast = cast || movie.cast;
 
       await movieRepo.save(movie);
       return res.status(201).json({ message: "Movie created successfully", movie });

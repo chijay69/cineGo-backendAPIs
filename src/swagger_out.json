@@ -1,0 +1,1086 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Cinego RestAPI Project",
+      "description": "Implementation of Swagger with TypeScript for Cinego backend REST APIs",
+      "version": "1.0.0",
+      "contact": {
+        "name": "CineGo",
+        "url": "http://cinego.live",
+        "email": "chijay59@gmail.com"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000",
+        "description": "Local server"
+      }
+    ],
+    "paths": {
+      "/signup": {
+        "post": {
+          "summary": "Sign Up",
+          "description": "Create a new user",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSignup"
+                },
+                "examples": {
+                  "example1": {
+                    "value": {
+                      "firstName": "John",
+                      "lastName": "Doe",
+                      "email": "john.doe@example.com",
+                      "password": "password123",
+                      "role": "user",
+                      "country": "US",
+                      "referalCode": "ABC123",
+                      "selectedPlanName": "basic"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserSignupResponse"
+                  },
+                  "examples": {
+                    "example1": {
+                      "value": {
+                        "message": "User created successfully",
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjIzMjIzNjM5LCJleHAiOjE2MjMyMjM5Mzl9.FUpt-kLUzX8drx2a9NrPH2ojUmy-hXc4XExkX_JPh68",
+                        "userDataResponse": {
+                          "id": 1,
+                          "firstName": "John",
+                          "lastName": "Doe",
+                          "email": "john.doe@example.com",
+                          "role": "user",
+                          "country": "US"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input data"
+            },
+            "500": {
+              "description": "Failed to create user"
+            }
+          }
+        }
+      },
+      "/signin": {
+        "post": {
+          "summary": "Sign In",
+          "description": "Authenticate a user",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSignin"
+                },
+                "examples": {
+                  "example1": {
+                    "value": {
+                      "email": "john.doe@example.com",
+                      "password": "password123"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login successful",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserSigninResponse"
+                  },
+                  "examples": {
+                    "example1": {
+                      "value": {
+                        "message": "Login successful",
+                        "userDataResponse": {
+                          "id": 1,
+                          "firstName": "John",
+                          "lastName": "Doe",
+                          "email": "john.doe@example.com",
+                          "role": "user",
+                          "country": "US"
+                        },
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjIzMjIzNjM5LCJleHAiOjE2MjMyMjM5Mzl9.FUpt-kLUzX8drx2a9NrPH2ojUmy-hXc4XExkX_JPh68"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid credentials"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/profile": {
+        "get": {
+          "summary": "Get User Profile",
+          "description": "Get user profile information",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserProfile"
+                  },
+                  "examples": {
+                    "example1": {
+                      "value": {
+                        "id": 1,
+                        "firstName": "John",
+                        "lastName": "Doe",
+                        "email": "john.doe@example.com",
+                        "role": "user",
+                        "country": "US"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Forbidden"
+            }
+          }
+        }
+      },
+      "/billings": {
+        "get": {
+          "summary": "Get All Billings",
+          "description": "Get billing information for every user",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "User ID",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Billing"
+                  },
+                  "examples": {
+                    "example1": {
+                      "value": {
+                        "id": 1,
+                        "userId": 1,
+                        "planName": "basic",
+                        "billingDate": "2022-05-13T14:30:00Z",
+                        "amount": 9.99
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }        
+      },
+      "/billing/{id}": {
+        "get": {
+          "summary": "Get Billing",
+          "description": "Get billing information for a user",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Billing ID",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Billing"
+                  },
+                  "examples": {
+                    "example1": {
+                      "value": {
+                        "id": 1,
+                        "userId": 1,
+                        "planName": "basic",
+                        "billingDate": "2022-05-13T14:30:00Z",
+                        "amount": 9.99
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }        
+      },
+      "/billing/update/{id}": {
+        "put": {
+          "summary": "Update Billing",
+          "description": "Update billing information for a user",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Billing ID",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Billing"
+                },
+                "examples": {
+                  "example1": {
+                    "value": {
+                      "id": 1,
+                      "userId": 1,
+                      "planName": "premium",
+                      "billingDate": "2022-06-13T14:30:00Z",
+                      "amount": 19.99
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Billing updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Billing"
+                  },
+                  "examples": {
+                    "example1": {
+                      "value": {
+                        "id": 1,
+                        "userId": 1,
+                        "planName": "premium",
+                        "billingDate": "2022-06-13T14:30:00Z",
+                        "amount": 19.99
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/billing/create/{id}": {
+        "post": {
+          "summary": "Update Billing",
+          "description": "Update billing information for a user",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "User ID",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Billing"
+                },
+                "examples": {
+                  "example1": {
+                    "value": {
+                      "id": 1,
+                      "userId": 1,
+                      "planName": "premium",
+                      "billingDate": "2022-06-13T14:30:00Z",
+                      "amount": 19.99
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Billing updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Billing"
+                  },
+                  "examples": {
+                    "example1": {
+                      "value": {
+                        "id": 1,
+                        "userId": 1,
+                        "planName": "premium",
+                        "billingDate": "2022-06-13T14:30:00Z",
+                        "amount": 19.99
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/billing/delete":{
+        "delete": {
+          "summary": "Delete Billing",
+          "description": "Delete billing information for a user",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "User ID",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Billing deleted successfully"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/movies": {
+        "get": {
+          "summary": "Get All Movies",
+          "description": "Retrieve a list of all movies.",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Movie"
+                    },
+                    "examples": {
+                        "example1": {
+                            "value": {
+                                "id": 1,
+                                "title": "A cracked dawn",
+                                "description": "A movie about the cracked dawn.",
+                                "url": "https:youtube.com",
+                                "director": "leonardo DiCapri",
+                                "year": 2022,
+                                "rating": "PG",
+                                "image": "www.pics.com/movie2.jpg",
+                                "cast": [
+                                    "leo",
+                                    "rachel",
+                                    "kim",
+                                    "jane"
+                                ],
+                                "createdAt": "2024-05-13T15:27:28.048Z",
+                                "updatedAt": "2024-05-13T15:32:00.429Z"
+                            }
+                        }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/movies/create":{
+        "post": {
+          "summary": "Create a Movie",
+          "description": "Create a new movie.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieInput"
+                },
+                "examples": {
+                    "example1": {
+                        "value": {
+                            "id": 1,
+                            "title": "A cracked dawn",
+                            "description": "A movie about the cracked dawn.",
+                            "url": "https:youtube.com",
+                            "director": "leonardo DiCapri",
+                            "year": 2022,
+                            "rating": "PG",
+                            "image": "www.pics.com/movie2.jpg",
+                            "cast": [
+                                "leo",
+                                "rachel",
+                                "kim",
+                                "jane"
+                            ],
+                            "createdAt": "2024-05-13T15:27:28.048Z",
+                            "updatedAt": "2024-05-13T15:32:00.429Z"
+                        }
+                    }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Movie created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/movies/update/{ids}": {
+        "put": {
+          "summary": "Update a Movie",
+          "description": "Update an existing movie by ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the movie to update",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieInput"
+                },
+                "examples": {
+                    "example1": {
+                        "value": {
+                            "id": 1,
+                            "title": "A cracked dawn",
+                            "description": "A movie about the cracked dawn.",
+                            "director": "leonardo DiCapri",
+                            "rating": "PG",
+                            "image": "www.pics.com/movie2.jpg",
+                            "cast": [
+                                "leo",
+                                "rachel",
+                                "kim",
+                                "jane"
+                            ]
+                        }
+                    }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Movie updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Movie not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/movies/delete/{ids}":{
+        "delete": {
+          "summary": "Delete a Movie",
+          "description": "Delete an existing movie by ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the movie to delete",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Movie deleted successfully"
+            },
+            "404": {
+              "description": "Movie not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/movies/reviews/{ids}": {
+        "get": {
+          "summary": "Get Reviews for a Movie",
+          "description": "Get all reviews for a specific movie by its ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the movie",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Review"
+                    },
+                    "examples":{
+                      "example1":{
+                        "value":{
+                          "response":"coming soon"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Movie not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/movies/reviewed/{ids}": {
+        "post": {
+          "summary": "Add a Review for a Movie",
+          "description": "Add a review for a specific movie by its ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the movie",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Review object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewInput"
+                },
+                "examples":{
+                  "example1":{
+                    "value":{
+                      "response":"coming soon"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Review added successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Review"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid request body"
+            },
+            "404": {
+              "description": "Movie not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/creditcards": {
+        "get": {
+          "summary": "Get All Credit Cards",
+          "description": "Retrieve a list of all credit cards.",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CreditCard"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "creditcards/create":{
+        "post": {
+          "summary": "Create a Credit Card",
+          "description": "Create a new credit card.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditCardInput"
+                },
+                "examples":{
+                    "example1":{
+                        "value":{
+                            "cardNumber": "1234 5678 9012 3456",
+                            "expiryDate": "12/25",
+                            "cvv": "219",
+                            "userId": 2
+                        }
+                    }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Credit card created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CreditCard"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid request body"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/creditcards/update/{ids}": {
+        "put": {
+          "summary": "Update a Credit Card",
+          "description": "Update an existing credit card by ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the credit card to update",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditCardInput"
+                },
+                "examples":{
+                    "example1":{
+                        "value":{
+                            "cardNumber": "1234 5678 9012 3456",
+                            "expiryDate": "12/25",
+                            "cvv": "219"                        
+                        }
+                    }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Credit card updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CreditCard"
+                  },
+                  "examples":{
+                    "example1":{
+                        "value":{
+                                "message": "Credit card number is invalid"
+                        }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Credit card not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "creditcards/delete/{ids}":{
+        "delete": {
+          "summary": "Delete a Credit Card",
+          "description": "Delete an existing credit card by ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the credit card to delete",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Credit card deleted successfully"
+            },
+            "404": {
+              "description": "Credit card not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "UserSignup": {
+          "type": "object",
+          "properties": {
+            "firstName": { "type": "string" },
+            "lastName": { "type": "string" },
+            "email": { "type": "string" },
+            "password": { "type": "string" },
+            "role": { "type": "string" },
+            "country": { "type": "string" },
+            "referalCode": { "type": "string" },
+            "selectedPlanName": { "type": "string" }
+          },
+          "required": ["firstName", "lastName", "email", "password", "role", "country", "selectedPlanName"]
+        },
+        "UserSignupResponse": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string" },
+            "token": { "type": "string" },
+            "userDataResponse": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "number" },
+                "firstName": { "type": "string" },
+                "lastName": { "type": "string" },
+                "email": { "type": "string" },
+                "role": { "type": "string" },
+                "country": { "type": "string" }
+              }
+            }
+          }
+        },
+        "UserSignin": {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string" },
+            "password": { "type": "string" }
+          },
+          "required": ["email", "password"]
+        },
+        "UserSigninResponse": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string" },
+            "userDataResponse": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "number" },
+                "firstName": { "type": "string" },
+                "lastName": { "type": "string" },
+                "email": { "type": "string" },
+                "role": { "type": "string" },
+                "country": { "type": "string" }
+              }
+            },
+            "token": { "type": "string" }
+          }
+        },
+        "UserProfile": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "number" },
+            "firstName": { "type": "string" },
+            "lastName": { "type": "string" },
+            "email": { "type": "string" },
+            "role": { "type": "string" },
+            "country": { "type": "string" }
+          }
+        },
+        "Billing": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "number" },
+            "userId": { "type": "number" },
+            "planName": { "type": "string" },
+            "billingDate": { "type": "string", "format": "date-time" },
+            "amount": { "type": "number" }
+          }
+        },
+        "CreditCardInput": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer"
+            },
+            "cardNumber": {
+              "type": "string"
+            },
+            "expiryDate": {
+              "type": "string",
+              "format": "date"
+            },
+            "cvv": {
+              "type": "string"
+            }
+          },
+          "required": ["userId", "cardNumber", "expiryDate", "cvv"]
+        },
+        "CreditCard": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "userId": {
+              "type": "integer"
+            },
+            "cardNumber": {
+              "type": "string"
+            },
+            "expiryDate": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          "required": ["id", "userId", "cardNumber", "expiryDate"]
+        },
+        "Movie": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "number" },
+              "title": { "type": "string" },
+              "description": { "type": "string" },
+              "url": { "type": "string" },
+              "director": { "type": "string" },
+              "year": { "type": "number" },
+              "rating": { "type": "number" },
+              "image": { "type": "string" },
+              "cast": { "type": "string" }
+            }
+      },
+      "MovieInput": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "url": { "type": "string" },
+          "director": { "type": "string" },
+          "year": { "type": "number" },
+          "rating": { "type": "number" },
+          "image": { "type": "string" },
+          "cast": { "type": "string" }
+        },
+        "required": ["title", "description", "url", "director", "year", "rating", "image", "cast"]
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "movieId": { "type": "number" },
+          "userId": { "type": "number" },
+          "rating": { "type": "number" },
+          "comment": { "type": "string" }
+        }
+      },
+      "ReviewInput": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "number" },
+          "rating": { "type": "number" },
+          "comment": { "type": "string" }
+        },
+        "required": ["userId", "rating", "comment"]
+      },
+      "securitySchemes": {
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "security": [
+      {
+        "BearerAuth": []
+      }
+    ]
+  }
+}
+  
