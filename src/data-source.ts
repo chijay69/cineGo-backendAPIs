@@ -9,7 +9,7 @@ dotenv.config();
 const { DB_TYPE, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_ENV, DB_SYNCHRONIZE } = process.env
 
 
-// export const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
     
     type: "postgres",
     host: DB_HOST,
@@ -22,7 +22,7 @@ const { DB_TYPE, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_E
     entities: [process.env.NODE_ENV === 'production' ? 'build/entity/*.js' : 'build/entity/*.js'],
     migrations: [__dirname + "/migration/*.js"],
     subscribers: [],
-    // ssl: {
-    //     rejectUnauthorized: false
-    //   }
+    ssl: {
+        rejectUnauthorized: false
+      }
 });
