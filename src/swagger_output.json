@@ -1,0 +1,846 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Cinego RestAPI Project",
+    "description": "Implementation of Swagger with TypeScript for Cinego backend REST APIs",
+    "version": "1.0.0",
+    "contact": {
+      "name": "CineGo",
+      "url": "http://cinego.live",
+      "email": "chijay59@gmail.com"
+    }
+  },
+  "host": "localhost:3000",
+  "schemes": ["http"],
+  "paths": {
+    "/signup": {
+      "post": {
+        "summary": "Sign Up",
+        "description": "Create a new user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": { "type": "string", "example": "John" },
+                "lastName": { "type": "string", "example": "Doe" },
+                "email": { "type": "string", "example": "john.doe@example.com" },
+                "password": { "type": "string", "example": "Password_123" },
+                "role": { "type": "string", "example": "user" },
+                "country": { "type": "string", "example": "Nigeria" },
+                "referalCode": { "type": "string", "example": "123789" },
+                "selectedPlanName": { "type": "string", "example": "Basic" }
+              },
+              "required": ["firstName", "lastName", "email", "password", "role", "country", "selectedPlanName"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": { "type": "string", "example": "User created successfully" },
+                "token": { "type": "string", "example": "JWT token" },
+                "userDataResponse": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 1 },
+                    "firstName": { "type": "string", "example": "John" },
+                    "lastName": { "type": "string", "example": "Doe" },
+                    "email": { "type": "string", "example": "john.doe@example.com" },
+                    "role": { "type": "string", "example": "user" },
+                    "country": { "type": "string", "example": "US" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "500": {
+            "description": "Failed to create user"
+          }
+        }
+      }
+    },
+    "/signin": {
+      "post": {
+        "summary": "Sign In",
+        "description": "Authenticate a user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": { "type": "string", "example": "john.doe@example.com" },
+                "password": { "type": "string", "example": "Password_123" }
+              },
+              "required": ["email", "password"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": { "type": "string", "example": "Login successful" },
+                "userDataResponse": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "number", "example": 1 },
+                    "firstName": { "type": "string", "example": "John" },
+                    "lastName": { "type": "string", "example": "Doe" },
+                    "email": { "type": "string", "example": "john.doe@example.com" },
+                    "role": { "type": "string", "example": "user" },
+                    "country": { "type": "string", "example": "US" }
+                  }
+                },
+                "token": { "type": "string", "example": "JWT token" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid credentials"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "summary": "Get User Profile",
+        "description": "Get user profile information",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "number", "example": 1 },
+                "firstName": { "type": "string", "example": "John" },
+                "lastName": { "type": "string", "example": "Doe" },
+                "email": { "type": "string", "example": "john.doe@example.com" },
+                "role": { "type": "string", "example": "user" },
+                "country": { "type": "string", "example": "US" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing/{id}": {
+      "get": {
+        "summary": "Get Billing",
+        "description": "Get billing information for a user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Billing"
+            }
+          },
+          "404": {
+            "description": "Billing not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/billing": {
+      "get": {
+        "summary": "Get All Billings",
+        "description": "Get all billing information",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Billing",
+                "properties": {
+                  "array response": { "type": "array", 
+                  "example": 
+                    [
+                      {
+                          "id": 3,
+                          "description": "U",
+                          "ammount": 499,
+                          "status": "PENDING",
+                          "plan": "BASIC",
+                          "method": "credit card",
+                          "schedule": "monthly",
+                          "startAt": "2024-05-13T12:41:12.684Z",
+                          "endAt": "2024-06-12T12:41:12.684Z"
+                      },
+                      {
+                          "id": 4,
+                          "description": "U",
+                          "ammount": 499,
+                          "status": "PENDING",
+                          "plan": "BASIC",
+                          "method": "credit card",
+                          "schedule": "monthly",
+                          "startAt": "2024-05-13T12:45:11.898Z",
+                          "endAt": "2024-06-12T12:45:11.898Z"
+                      },
+                      {
+                          "id": 5,
+                          "description": "Unlimited ad-free movies, TV shows, and mobile games\n Watch on 1 supported device at a time; Watch in HD\n Download on 1 supported device at a time",
+                          "ammount": 499,
+                          "status": "PENDING",
+                          "plan": "BASIC",
+                          "method": "credit card",
+                          "schedule": "monthly",
+                          "startAt": "2024-05-13T12:46:00.926Z",
+                          "endAt": "2024-06-12T12:46:00.926Z"
+                      },
+                      {
+                          "id": 6,
+                          "description": "Unlimited ad-free movies, TV shows, and mobile games\n Watch on 1 supported device at a time; Watch in HD\n Download on 1 supported device at a time",
+                          "ammount": 499,
+                          "status": "PENDING",
+                          "plan": "BASIC",
+                          "method": "credit card",
+                          "schedule": "monthly",
+                          "startAt": "2024-05-13T12:50:07.703Z",
+                          "endAt": "2024-06-12T12:50:07.703Z"
+                      },
+                      {
+                          "id": 7,
+                          "description": "Unlimited ad-free movies, TV shows, and mobile games\n Watch on 1 supported device at a time; Watch in HD\n Download on 1 supported device at a time",
+                          "ammount": 499,
+                          "status": "PENDING",
+                          "plan": "BASIC",
+                          "method": "credit card",
+                          "schedule": "monthly",
+                          "startAt": "2024-05-13T12:52:52.513Z",
+                          "endAt": "2024-06-12T12:52:52.513Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/billing/{id}/": {
+      "post": {
+        "summary": "Set Billing",
+        "description": "Set billing information for a user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Billing information",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/Billing",
+              "properties":{
+                "method": "credit card"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Billing set successfully",
+            "schema": {
+              "$ref": "#/definitions/Billing",
+              "type": "object",
+              "properties":{
+                "message":{
+                  "type":"string", "example":"Billing created successfully",
+                },
+                "newBilling":{
+                  "type":"object", 
+                  "example":"newBilling" {
+                    "ammount": 499,
+                    "description": "Unlimited ad-free movies, TV shows, and mobile games\n Watch on 1 supported device at a time; Watch in HD\n Download on 1 supported device at a time",
+                    "plan": "BASIC",
+                    "method": "credit card",
+                    "schedule": "monthly",
+                    "startAt": "2024-05-13T12:52:52.513Z",
+                    "endAt": "2024-06-12T12:52:52.513Z",
+                    "status": "PENDING",
+                    "user": {
+                        "id": 2,
+                        "firstName": "alozie",
+                        "lastName": "victor",
+                        "email": "alozie59@live.com",
+                        "password": "$2b$14$z0sL9zjxLPIf8wjaFD6Puu7f7u3ntj7iCy7T1GI6raNuKgZFzuhFy",
+                        "country": "Nigeria",
+                        "plan": "BASIC",
+                        "roles": [
+                            "admin"
+                        ],
+                        "referalCode": 8945564,
+                        "createdAt": "2024-05-13T08:29:44.747Z",
+                        "updatedAt": "2024-05-13T08:29:44.747Z",
+                        "billing": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/billing/{id}/": {
+      "put": {
+        "summary": "Update Billing",
+        "description": "Update billing information for a user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Updated billing information",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Billing"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Billing updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Billing",
+              "properties":{
+                  "message": {"type":"string","example":"Movie updated"},
+                  "movie": {
+                      "id": {"type":"number", "example":1},
+                      "title": {"type":"string", "example": "cracked dawn" },
+                      "description": {"type": "string", "example": "A movie about the cracked dawn."},
+                      "url": {"type":"string" ,"example":"https:youtube.com"},
+                      "director": {"type":"string","example":"leonardo DiCapri"},
+                      "year": {"type":"number","example":2022},
+                      "rating": {"type":"string","example":"PG"},
+                      "image": {"type":"string","example":"www.pics.com/movie2.jpg"},
+                      "cast":{"type":"array", "example":[
+                          "leo",
+                          "rachel",
+                          "kim",
+                          "jane"
+                      ]},
+                      "createdAt": {"type":"date object","example":"2024-05-13T15:27:28.048Z"},
+                      "updatedAt": {"type":"date object","example":"2024-05-13T15:27:28.049Z"}
+                  }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/billing/{id}/": {
+      "delete": {
+        "summary": "Delete Billing",
+        "description": "Delete billing information for a user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Billing deleted successfully"
+          },
+          "404": {
+            "description": "Billing not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "summary": "Get Movie",
+        "description": "Get movie information by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Movie ID",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Movie",
+              "type":"object",
+              "properties":[
+                {
+                  "message":{ "type":"string", "example":"Movie retireved successfully"},
+                  "movie": {
+                    "title": {"type":"string","example":"A cracked dawn"},
+                    "description": {"type":"string","example":"A movie about the cracked dawn."},
+                    "url": {"type":"string","example":"https:youtube.com"},
+                    "director": {"type":"string","example":"leonardo DiCapri"},
+                    "year": {"type":"number","example":2022},
+                    "rating": {"type":"string","example":"PG"},
+                    "image": {"type":"string","example":"www.pics.com/movie.jpg"},
+                    "cast": {"type":"array","example":[
+                        "leo",
+                        "rachel",
+                        "kim"
+                    ]},
+                    "id": {"type":"integer","example":1},
+                    "createdAt": {"type":"date object","example":"2024-05-13T15:27:28.048Z"},
+                    "updatedAt": {"type":"date object","example":"2024-05-13T15:27:28.048Z"}
+                }
+                }
+              ]
+            }
+          },
+          "404": {
+            "description": "Movie not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "summary": "Get All Movies",
+        "description": "Get all movies",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Movie"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/movies/create": {
+      "post": {
+        "summary": "Create Movie",
+        "description": "Create a new movie",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Movie information",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Movie",
+              "properties":[
+                {
+                  "title": {"type":"string","example":"A cracked dawn"},
+                  "description": {"type":"string","example":"A movie about the cracked dawn."},
+                  "url":{"type":"string","example":"https:youtube.com"},
+                  "director": {"type":"string","example":"leonardo DiCapri"},
+                  "year": {"type":"number","example":2021},
+                  "rating": {"type":"string","example":"PG"},
+                  "image": {"type":"string","example":"www.pics.com/movie.jpg"},
+                  "cast":{"type":"array", "example":["leo", "rachel", "kim"]}
+              }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie created successfully",
+            "schema": {
+              "$ref": "#/definitions/Movie",
+              "properties":[
+                {
+                  "title": {"type":"string","example":"A cracked dawn"},
+                  "description": {"type":"string","example":"A movie about the cracked dawn."},
+                  "url":{"type":"string","example":"https:youtube.com"},
+                  "director": {"type":"string","example":"leonardo DiCapri"},
+                  "year": {"type":"number","example":2021},
+                  "rating": {"type":"string","example":"PG"},
+                  "image": {"type":"string","example":"www.pics.com/movie.jpg"},
+                  "cast":{"type":"array", "example":["leo", "rachel", "kim"]}
+              }
+              ],
+              "required":["title", "description", "url", "year", "rating"]
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/movies/{id}/update": {
+      "put": {
+        "summary": "Update Movie",
+        "description": "Update movie information by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Movie ID",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Updated movie information",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Movie"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Movie"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Movie not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/movies/{id}/delete": {
+      "delete": {
+        "summary": "Delete Movie",
+        "description": "Delete movie by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Movie ID",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie deleted successfully"
+          },
+          "404": {
+            "description": "Movie not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },        
+    "/users": {
+      "get": {
+        "summary": "Get All Users",
+        "description": "Get a list of all users",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "number", "example": 1 },
+                  "firstName": { "type": "string", "example": "John" },
+                  "lastName": { "type": "string", "example": "Doe" },
+                  "email": { "type": "string", "example": "john.doe@example.com" },
+                  "role": { "type": "string", "example": "user" },
+                  "country": { "type": "string", "example": "US" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/users/{ids}": {
+      "put": {
+        "summary": "Update User",
+        "description": "Update user information",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": { "type": "string", "example": "John" },
+                "lastName": { "type": "string", "example": "Doe" },
+                "email": { "type": "string", "example": "john.doe@example.com" },
+                "country": { "type": "string", "example": "US" }
+              },
+              "required": ["firstName", "lastName", "email", "country"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete User",
+        "description": "Delete user",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Home",
+        "description": "Home route",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "message": { "type": "string", "example": "Hello World!" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "definitions": {
+    "Movie": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example":1
+        },
+        "title": {
+          "type": "string",
+          "example":"A cracked dawn"
+        },
+        "director": {
+          "type": "string",
+          "example": "John"
+        },
+        "year": {
+          "type": "integer",
+          "format": "int32",
+          "example":2021
+        }
+      },
+      "required": [
+        "title",
+        "director",
+        "year"
+      ]
+    },
+    "Billing": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "userId": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "example": 699
+        },
+        "status": {
+          "$ref": "#/definitions/Status"
+        }
+      },
+      "required": [
+        "userId",
+        "amount",
+        "status"
+      ]
+    }
+  }  
+}

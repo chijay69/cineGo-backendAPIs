@@ -23,34 +23,40 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
     // Get token from cache
     const cachedToken = await cache.get('jwtToken');
     if (cachedToken !== token) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "Unauthorized: Token is not the same as cached value." });
     }
+
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     if (!decode) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "Unauthorized: Could not verify token." });
     }
-    
-    
+
     req[" currentuser"] = decode;
+    
     next();
 };
 
 
-export const authorization = (roles: string[])=>{
+export const authorization = (roles: string[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const userRepo = userRepository(User);
         const user = await userRepo.findOne({
-            where: { id: req[" currentuser"].id},
-            relations: ['roles']
+            where: { id: req[" currentuser"].id },
         });
         console.log(user);
         if (!user) {
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json({ message: "Unauthorized: Restricted access to user" });
         }
-        const userRoles = user.roles.map((role)=>(role.name));
-        const hasPermission = roles.some(role => userRoles.includes(role))
+
+        const userRole: any[] = user.roles;
+
+        console.log(userRole);
+        
+        const hasPermission = roles.some(role => userRole.includes(role));
+
+        console.log(hasPermission)
         if (!hasPermission) {
-            return res.status(403).json({ message: "Forbidden" })
+            return res.status(403).json({ message: "Forbidden" });
         }
         next();
     };

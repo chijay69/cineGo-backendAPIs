@@ -1,7 +1,7 @@
 import { AppDataSource } from "../data-source";
 import { EntityTarget, Repository } from "typeorm";
-import { Token } from "../entity/Token";
+import { CreditCard } from "../entity/CreditCard";
 
-export const TokenRepository = (entity: EntityTarget<Token>): Repository<Token> => {
+export const creditCardRepository = (entity: EntityTarget<CreditCard>): Repository<CreditCard> => {
     return AppDataSource.getRepository(entity);
 };

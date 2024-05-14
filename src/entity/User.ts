@@ -1,9 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany, OneToOne } from "typeorm"
-import { Role } from "./role"
-import { Movie } from "./Movie"
-import { Billing } from "./Billing"
-import { CreditCard } from "./CreditCard"
-import { Profile } from "./Profile"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, OneToMany, OneToOne } from "typeorm";
+import { Role } from "./role";
+import { Movie } from "./Movie";
+import { Billing } from "./Billing";
+import { CreditCard } from "./CreditCard";
+import { Profile } from "./Profile";
+import { Plan } from "./Plan";
+import { Plans } from "./Plans";
 
 
 @Entity({ name: "users" })
@@ -27,6 +29,12 @@ export class User {
     @Column({ nullable: false })
     country: string;
     
+    @Column({ nullable: false })
+    plan: Plans;
+    
+    @Column("simple-array", { nullable: false })
+    roles: Role[];
+    
     @Column({ nullable: true })
     referalCode?: number;
     
@@ -43,13 +51,9 @@ export class User {
     profile: Profile;
     
     @ManyToMany(() => Movie, (movie) => movie.user)
-    @JoinTable()
     movies: Movie;
 
     @OneToMany(() => Billing, (billing) => billing.user)
-    billing: Billing[];
+    billing: Billing;
     
-    @ManyToMany(()=> Role)
-    @JoinTable()
-    roles: Role[]
 }

@@ -5,13 +5,14 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     ManyToMany,
+    JoinTable,
   } from "typeorm";
 import { User } from "./User";
   
   @Entity({ name: "movies" })
   export class Movie {
     @PrimaryGeneratedColumn("rowid")
-    id: string;
+    id: number;
   
     @Column({ nullable: false })
     title: string;
@@ -44,5 +45,6 @@ import { User } from "./User";
     updatedAt: Date;
 
     @ManyToMany(() => User, (user) => user.movies)
+    @JoinTable()
     user: User;
   }
