@@ -9,7 +9,7 @@ import { User } from "./User";
 
   @Entity({ name: "creditcards"})
   export class CreditCard{
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     id: number;
 
     @Column()

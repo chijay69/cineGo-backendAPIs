@@ -4,14 +4,13 @@ import { Movie } from "./Movie";
 import { Billing } from "./Billing";
 import { CreditCard } from "./CreditCard";
 import { Profile } from "./Profile";
-import { Plan } from "./Plan";
 import { Plans } from "./Plans";
 
 
 @Entity({ name: "users" })
 export class User {
 
-    @PrimaryGeneratedColumn("rowid")
+    @PrimaryGeneratedColumn("uuid")
     id: number;
 
     @Column({ nullable: false })

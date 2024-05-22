@@ -11,7 +11,7 @@ import { User } from "./User";
   
   @Entity({ name: "movies" })
   export class Movie {
-    @PrimaryGeneratedColumn("rowid")
+    @PrimaryGeneratedColumn("uuid")
     id: number;
   
     @Column({ nullable: false })
