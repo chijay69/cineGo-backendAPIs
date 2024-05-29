@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { MovieRepository } from '../../repository/MovieRepository'
+import { userRepository } from '../../repository/UserRepository'
 import { Movie } from "../../entity/Movie";
 import * as cache from "memory-cache";
+import { User } from "../../entity/User";
 
 export class MovieController {
   static async getAllMovies(req: Request, res: Response) {
@@ -15,6 +17,32 @@ export class MovieController {
         console.log("serving from cache");
       }
 
+      return res.status(200).json({ moviesData });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  static async getMoviesByUser(req: Request, res: Response) {
+    try {
+      const { id } = req.body;
+      const user = await userRepository(User).findOne({ where: { id: id } });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      let moviesData = cache.get(`moviesdata_${id}`);
+      if (!moviesData) {
+        console.log("serving from db");
+        let movies = await MovieRepository(Movie).find();
+        if (user.type === "freemium") {
+          movies = movies.filter(movie => movie.isAllowed);
+        }
+        cache.put(`moviesdata_${id}`, movies, 6000);
+        moviesData = movies;
+      } else {
+        console.log("serving from cache");
+      }
       return res.status(200).json({ moviesData });
     } catch (error) {
       console.error(error);

@@ -54,5 +54,6 @@ export class User {
 
     @OneToMany(() => Billing, (billing) => billing.user)
     billing: Billing;
+  type: string;
     
 }

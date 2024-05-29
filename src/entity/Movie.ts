@@ -34,6 +34,9 @@ import { User } from "./User";
   
     @Column({ nullable: false })
     image: string;
+
+    @Column({ nullable: false, default: true})
+    isAllowed: boolean;
   
     @Column("simple-array",{ nullable: false })
     cast: string[];
