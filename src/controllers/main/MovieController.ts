@@ -26,8 +26,8 @@ export class MovieController {
 
   static async getMoviesByUser(req: Request, res: Response) {
     try {
-      const { id } = req.body;
-      const user = await userRepository(User).findOne({ where: { id: id } });
+      const { ids } = req.body;
+      const user = await userRepository(User).findOne({ where: { id: ids } });
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }

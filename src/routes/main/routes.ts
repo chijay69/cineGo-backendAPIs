@@ -26,6 +26,7 @@ mainRouter.get("/movies", authentication, authorization(["admin"]), MovieControl
 mainRouter.post("/movies/create", authentication, authorization(["admin"]), MovieController.createMovie);
 mainRouter.put("/movies/update/:ids", authentication, authorization(["admin"]), MovieController.updateMovie);
 mainRouter.delete("/movies/delete:ids", authentication, authorization(["admin"]), MovieController.deleteMovie);
+mainRouter.get("/movies/by_user:ids", authentication, authorization(["admin"]), MovieController.getMoviesByUser);
 mainRouter.get("/movies/reviews:ids", authentication, authorization(["admin"]), (req, res) => res.send("coming soon"));
 mainRouter.post("/movies/reviewed:ids", authentication, authorization(["admin"]), (req, res) => res.send("coming soon"));
 
