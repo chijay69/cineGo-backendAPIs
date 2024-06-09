@@ -496,6 +496,52 @@
           }
         }
       },
+      "/movies/user/{ids}": {
+        "get": {
+          "summary": "Get All Movies based on user",
+          "description": "Retrieve a list of all movies based on user category.",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Movie"
+                    },
+                    "examples": {
+                        "example1": {
+                            "value": {
+                                "id": 1,
+                                "title": "A cracked dawn",
+                                "description": "A movie about the cracked dawn.",
+                                "url": "https:youtube.com",
+                                "director": "leonardo DiCapri",
+                                "year": 2022,
+                                "rating": "PG",
+                                "image": "www.pics.com/movie2.jpg",
+                                "cast": [
+                                    "leo",
+                                    "rachel",
+                                    "kim",
+                                    "jane"
+                                ],
+                                "createdAt": "2024-05-13T15:27:28.048Z",
+                                "updatedAt": "2024-05-13T15:32:00.429Z"
+                            }
+                        }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
       "/movies/create":{
         "post": {
           "summary": "Create a Movie",
